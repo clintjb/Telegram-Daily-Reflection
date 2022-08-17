@@ -7,25 +7,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout repo content
-        uses: actions/checkout@v2 # checkout the repository content to github runner.
       
-      
-      - name: pip
-        uses: actions/cache@v2
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      - name: setup python
+
+      - name: Setting up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8 #install the python needed
-      - name: execute py script # run the run.py to get the latest data
+          python-version: "3.9"
+          architecture: "x64"
+
+      - name: Running Scripts
         run: |
           pip install -r requirements.txt
           python script.py
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Reflected"
+          git push
         env:
           SEND_ID: ${{ secrets.SEND_ID }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
