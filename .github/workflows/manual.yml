@@ -1,5 +1,8 @@
 name: Manual Trigger
-
+env:
+      SEND_ID: ${{ secrets.SEND_ID }}
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+    
 on: workflow_dispatch
 
 jobs:
