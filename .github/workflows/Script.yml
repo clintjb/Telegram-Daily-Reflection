@@ -3,11 +3,8 @@ name: Run Script
 env:
       SEND_ID: ${{ secrets.SEND_ID }}
       TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+
+on: workflow_dispatch
 
 jobs:
   build:
@@ -18,7 +15,6 @@ jobs:
       - uses: jannekem/run-python-script-action@v1
         with:
           script: |
-               
             import requests
             import pandas as pd
 
