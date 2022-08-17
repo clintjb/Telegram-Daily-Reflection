@@ -1,31 +1,21 @@
 name: Run Script
 
-env:
-      SEND_ID: ${{ secrets.SEND_ID }}
-      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-
 on: workflow_dispatch
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - uses: jannekem/run-python-script-action@v1
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content to github runner.
+      - name: setup python
+        uses: actions/setup-python@v2
         with:
-          script: |
-            import requests
-            import pandas as pd
-
-            # Import Keys
-            TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
-            SEND_ID = os.environ['SEND_ID']
-
-            reflections = pd.read_csv('reflections.tsv', delimiter='\t', index_col=False, header=None)
-
-            TOKEN = TELEGRAM_TOKEN
-            CHAT_ID = SEND_ID
-            message = reflections.sample()
-            url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={message}"
-            print(requests.get(url).json()) # this sends the message
+          python-version: 3.8 #install the python needed
+      - name: execute py script # run the run.py to get the latest data
+        run: |
+          python script.py
+        env:
+          SEND_ID: ${{ secrets.SEND_ID }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
